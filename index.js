@@ -2,7 +2,7 @@
 let  readlineSync = require('readline-sync');
 let listaDeTareas = [ ];
 
-let menu =  () => {
+let menu = async () => {
 let exit= false ; 
 while( exit == false)
 
@@ -15,13 +15,22 @@ console.log (' 5 .Finalizar Tareas :');
 
  let pregunta = readlineSync.question(' Que opcion desea escoger :');
  switch ( pregunta){
-   case"1" : addTrea()
+   case"1" :
+    addTrea ()
+    .then((agregarTodo)=>{
+      console.log("Tarea Creada" , agregarTodo)
+    })
+    .catch ( (error)=>{
+      console.error("error al accionar tarea " , error );
+    })
+
+
     break; 
    
-   case"2" :complete()
+   case"2" :await complete()
    break; 
 
-   case"3" :eliminarTareas()
+   case"3" : await eliminarTareas()
  
    break; 
 
@@ -48,34 +57,52 @@ const addTrea = ()=> {
  let pp =  readlineSync.question('Digite Su Id :')
  let cc =  readlineSync.question('Descripcion De La Tarea :')
  
- let agregarTodo = { id2 :pp , Ds:cc , z : false  } 
-  listaDeTareas.push( agregarTodo) 
-  console.log(listaDeTareas ) 
+  return new Promise((resolve, reject) => {
+    let agregarTodo = { id2 :pp , Ds:cc , z : false  } 
+    listaDeTareas.push( agregarTodo) 
+    resolve(agregarTodo);
+  
+
+ })
+
+ 
+
+
 };
 
 const eliminarTareas = ()=>{
     console.log( listaDeTareas)
     const lola = readlineSync.question("Que Id Quieres ELiminar ");
-    const axiLista =  listaDeTareas.filter( (agregarTodo) => agregarTodo.pp !== lola );
-    listaDeTareas = axiLista 
+    
+    return new Promise((resolve, reject) => {
+      const axiLista =  listaDeTareas.filter( (agregarTodo) => agregarTodo.pp !== lola );
+       listaDeTareas = axiLista 
+       resolve(a)
+    })
 }
  
 let complete = ()=> {
    console.log( listaDeTareas);
    let lua = readlineSync.question( " Que Id Desea Completar : ")
-   const val = listaDeTareas.map( ( agregarTodo)=>{ 
+   return new Promise((resolve, reject) => {
+    const val = listaDeTareas.map( ( agregarTodo)=>{ 
     
-    if ( agregarTodo.pp == lua  ){ 
-      return {
-        ...agregarTodo,completado : !agregarTodo.completado
+      if ( agregarTodo.pp == lua  ){ 
+        return {
+          ...agregarTodo,completado : !agregarTodo.completado
+        }
+       } 
+       else { 
+        return agregarTodo; 
       }
-     } 
-     else { 
-      return agregarTodo; 
-    }
-   } )
+     } )
 
-   listaDeTareas = val 
+     listaDeTareas = val 
+
+     resolve(val)
+   })
+
+   
 
 
 
